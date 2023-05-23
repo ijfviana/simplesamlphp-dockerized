@@ -11,7 +11,13 @@ RUN microdnf install -y wget tar \
     && echo "$ssp_hash  simplesamlphp-$ssp_version.tar.gz" | sha256sum -c - \
     && cd /var \
     && tar xzf /simplesamlphp-$ssp_version.tar.gz \
-    && mv simplesamlphp-$ssp_version simplesamlphp
+    && mv simplesamlphp-$ssp_version simplesamlphp \
+    && cp simplesamlphp/config/config.php.dist simplesamlphp/config/config.php \ 
+    && cp simplesamlphp/config/authsources.php.dist simplesamlphp/config/authsources.php \
+    && sed -i 's/123/123456/g'  simplesamlphp/config/config.php \
+    && sed -i 's/defaultsecretsalt/defaultsecretsalt123456/g'  simplesamlphp/config/config.php \ 
+    && sed -i 's/myapp.example.org/myapp.uhu.es/g' authsources.php \
+    && wget https://getcomposer.org/installer -O composer-installer.php && php composer-installer.php --filename=composer --install-dir=/usr/local/bin
 
 FROM rockylinux/rockylinux:9.1-minimal
 
@@ -27,7 +33,7 @@ COPY --from=download_ssp /var/simplesamlphp /var/simplesamlphp
     && dnf clean all \
     && rm -rf /var/cache/yum
     
-RUN microdnf install -y httpd php mod_ssl \
+RUN microdnf install -y httpd php  php-intl mod_ssl \
     && microdnf clean all \
     && rm -rf /var/cache/yum
     
