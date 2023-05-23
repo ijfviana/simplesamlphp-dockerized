@@ -3,7 +3,7 @@ FROM rockylinux/rockylinux:9.1-minimal as download_ssp
 ARG SIMPLE_SAML_PHP_VERSION=2.0.4
 ARG SIMPLE_SAML_PHP_HASH=10f50ae5165b044cd4c78de3c118a025ecf47586e428f16b340933f9d44ab52c
 
-RUN microdnf update
+RUN microdnf update -y
 RUN microdnf install -y wget tar \
     && ssp_version=$SIMPLE_SAML_PHP_VERSION; \
            ssp_hash=$SIMPLE_SAML_PHP_HASH; \
@@ -31,12 +31,11 @@ RUN microdnf install -y httpd php mod_ssl \
     && microdnf clean all \
     && rm -rf /var/cache/yum
     
-
-RUN echo $'\nSetEnv SIMPLESAMLPHP_CONFIG_DIR /var/simplesamlphp/config\nAlias /simplesaml /var/simplesamlphp/www\n \
-<Directory /var/simplesamlphp/www>\n \
+RUN echo $'\nSetEnv SIMPLESAMLPHP_CONFIG_DIR /var/simplesamlphp/config\nAlias /simplesaml /var/simplesamlphp/public\n \
+<Directory /var/simplesamlphp/public>\n \
     Require all granted\n \
 </Directory>\n' \
-       >> /etc/httpd/conf/httpd.conf
+       >> /etc/httpd/conf.d/simplesamlphp.conf
        
 RUN openssl req -new -newkey rsa:4096 -days 365 -nodes -x509 \
     -subj "/C=ES/ST=Huelva/L=Huelva/O=UHU/CN=localhost" \
