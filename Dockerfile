@@ -37,6 +37,10 @@ RUN echo $'\nSetEnv SIMPLESAMLPHP_CONFIG_DIR /var/simplesamlphp/config\nAlias /s
     Require all granted\n \
 </Directory>\n' \
        >> /etc/httpd/conf/httpd.conf
+       
+RUN openssl req -new -newkey rsa:4096 -days 365 -nodes -x509 \
+    -subj "/C=ES/ST=Huelva/L=Huelva/O=UHU/CN=localhost" \
+    -keyout /etc/pki/tls/private/localhost.key  -out /etc/pki/tls/certs/localhost.crt
 
 COPY httpd-foreground /usr/local/bin/
 
