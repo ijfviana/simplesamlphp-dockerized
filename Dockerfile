@@ -16,7 +16,10 @@ RUN microdnf install -y wget tar php \
     && cp simplesamlphp/config/authsources.php.dist simplesamlphp/config/authsources.php \
     && sed -i 's/123/123456/g'  simplesamlphp/config/config.php \
     && sed -i 's/defaultsecretsalt/defaultsecretsalt123456/g'  simplesamlphp/config/config.php \ 
+    && touch /var/log/simplesaml.log
+    && chmod 777 /var/log/simplesaml.log
     $$ sed -i -e '/loggingdir/s/\/\///' simplesamlphp/config/config.php \
+    && sed -e '/production/s/true/false/' \
     && sed -i 's/myapp.example.org/myapp.uhu.es/g' simplesamlphp/config/authsources.php \
     && wget https://getcomposer.org/installer -O composer-installer.php && php composer-installer.php --filename=composer --install-dir=/usr/local/bin
 
