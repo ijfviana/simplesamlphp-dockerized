@@ -1,20 +1,7 @@
 [![](https://badge.imagelayers.io/unicon/simplesamlphp:latest.svg)](https://imagelayers.io/?images=unicon/simplesamlphp:latest 'image layer analysis')
 
-## Important Note for 1.19.3+
-
-Starting with the 1.19.3 image, only the bare minimum requirements to run are being included in the base image. The
-following (and their dependencies) will need to be installed in a custom image if needed:
-
-* wget
-* mod_ssl
-* php-ldap
-* php-memcache
-* php-pear
-
-Also not included is the remirepo RPM repository.
-
 ## Overview
-This Docker image contains a deployed SimpleSAMLphp IdP/SP based on PHP 7.2 running on Apache HTTP Server 2.4 on the latest CentOS 7 base. This image is a base image and should be used to set the content and configuration with local changes. It is suitable for use as a standalone IdP application or as a base to deploy another PHP application that will be protected by the service provider module.
+This Docker image contains a deployed SimpleSAMLphp IdP/SP based on PHP 7.2 running on Apache HTTP Server 2.4 on the latest Rocky Linux 9 base. This image is a base image and should be used to set the content and configuration with local changes. It is suitable for use as a standalone IdP application or as a base to deploy another PHP application that will be protected by the service provider module.
 
 ```
 [rootdir]
