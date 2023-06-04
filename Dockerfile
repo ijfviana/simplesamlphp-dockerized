@@ -14,12 +14,14 @@ RUN microdnf install -y wget tar php \
     && mv simplesamlphp-$ssp_version simplesamlphp \
     && cp simplesamlphp/config/config.php.dist simplesamlphp/config/config.php \ 
     && cp simplesamlphp/config/authsources.php.dist simplesamlphp/config/authsources.php \
-    && sed -i 's/123/123456/g'  simplesamlphp/config/config.php \
-    && sed -i 's/defaultsecretsalt/defaultsecretsalt123456/g'  simplesamlphp/config/config.php \ 
-    && touch /var/log/simplesaml.log
-    && chmod 777 /var/log/simplesaml.log
-    $$ sed -i -e '/loggingdir/s/\/\///' simplesamlphp/config/config.php \
-    && sed -e '/production/s/true/false/' \
+    && sed -i "/technicalcontact_name/s/Administrator/Mi nombre/"  simplesamlphp/config/config.php \
+    && sed -i "/technicalcontact_email/s/na@example.org/in@uhu.es/"  simplesamlphp/config/config.php \
+    && sed -i '/language.default/s/en/es/g'  simplesamlphp/config/config.php \
+    && sed -i '/auth.adminpassword/s/123/123456/g'  simplesamlphp/config/config.php \
+    && sed -i '/secretsalt/s/defaultsecretsalt/defaultsecretsalt123456/g'  simplesamlphp/config/config.php \  
+    && sed -i "/loggingdir/s/\/var\/log/\/var\/log\/simplesamlphp/" simplesamlphp/config/config.php \
+    && sed -i -e '/loggingdir/s/\/\///' simplesamlphp/config/config.php \
+    && sed -i '/production/s/true/false/' simplesamlphp/config/config.php \
     && sed -i 's/myapp.example.org/myapp.uhu.es/g' simplesamlphp/config/authsources.php \
     && wget https://getcomposer.org/installer -O composer-installer.php && php composer-installer.php --filename=composer --install-dir=/usr/local/bin
 
@@ -38,8 +40,7 @@ COPY --from=download_ssp /usr/local/bin /usr/local/bin
 #    && dnf clean all \
 #    && rm -rf /var/cache/yum
 
-VOLUME /var/simplesamlphp
-    
+
 RUN microdnf install -y httpd php  php-intl php-zip mod_ssl git \
     && microdnf clean all \
     && rm -rf /var/cache/yum
@@ -57,6 +58,9 @@ RUN openssl req -new -newkey rsa:4096 -days 365 -nodes -x509 \
 RUN openssl req -new -newkey rsa:4096 -days 365 -nodes -x509 \
     -subj "/C=ES/ST=Huelva/L=Huelva/O=UHU/CN=localhost" \
     -keyout /etc/pki/tls/private/localhost.key  -out /etc/pki/tls/certs/localhost.crt
+    
+RUN  mkdir /var/log/simplesamlphp \
+     && chown apache:apache /var/log/simplesamlphp
 
 COPY httpd-foreground /usr/local/bin/
 
