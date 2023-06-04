@@ -23,7 +23,11 @@ RUN microdnf install -y wget tar php \
     && sed -i -e '/loggingdir/s/\/\///' simplesamlphp/config/config.php \
     && sed -i '/production/s/true/false/' simplesamlphp/config/config.php \
     && sed -i 's/myapp.example.org/myapp.uhu.es/g' simplesamlphp/config/authsources.php \
-    && wget https://getcomposer.org/installer -O composer-installer.php && php composer-installer.php --filename=composer --install-dir=/usr/local/bin
+    && openssl req -new -newkey rsa:4096 -days 365 -nodes -x509 \
+    -subj "/C=ES/ST=Huelva/L=Huelva/O=UHU/CN=localhost" \
+    -keyout simplesamlphp/cert/localhost.key  -out simplesamlphp/cert/localhost.crt 
+    
+RUN wget https://getcomposer.org/installer -O composer-installer.php && php composer-installer.php --filename=composer --install-dir=/usr/local/bin
 
 FROM rockylinux/rockylinux:9.1-minimal
 
@@ -54,11 +58,7 @@ RUN echo $'\nSetEnv SIMPLESAMLPHP_CONFIG_DIR /var/simplesamlphp/config\nAlias /s
 RUN openssl req -new -newkey rsa:4096 -days 365 -nodes -x509 \
     -subj "/C=ES/ST=Huelva/L=Huelva/O=UHU/CN=localhost" \
     -keyout /etc/pki/tls/private/localhost.key  -out /etc/pki/tls/certs/localhost.crt
-    
-RUN openssl req -new -newkey rsa:4096 -days 365 -nodes -x509 \
-    -subj "/C=ES/ST=Huelva/L=Huelva/O=UHU/CN=localhost" \
-    -keyout /etc/pki/tls/private/localhost.key  -out /etc/pki/tls/certs/localhost.crt
-    
+        
 RUN  mkdir /var/log/simplesamlphp \
      && chown apache:apache /var/log/simplesamlphp
 
