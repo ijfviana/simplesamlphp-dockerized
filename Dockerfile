@@ -45,7 +45,7 @@ COPY --from=download_ssp /usr/local/bin /usr/local/bin
 #    && rm -rf /var/cache/yum
 
 
-RUN microdnf install -y httpd php  php-intl php-zip mod_ssl git \
+RUN microdnf install -y httpd php php-pdo php-mysqli php-intl php-zip mod_ssl git \
     && microdnf clean all \
     && rm -rf /var/cache/yum
     
