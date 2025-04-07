@@ -64,6 +64,11 @@ RUN  mkdir /var/log/simplesamlphp \
 
 COPY httpd-foreground /usr/local/bin/
 
+RUN cp -r /var/simplesamlphp /var/simplesamlphp-default
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
 EXPOSE 80 443
 
+ENTRYPOINT ["/entrypoint.sh"]
 CMD ["httpd-foreground"]
