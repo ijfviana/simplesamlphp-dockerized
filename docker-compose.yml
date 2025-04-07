@@ -1,0 +1,12 @@
+iservices:
+  simplesamlphp:
+    build: .
+    image: simplesamlphp-dockerized
+    hostname: simplesaml-up.in.uhu.es
+    ports:
+      - "2443:443"
+    volumes:
+      - ./data/config:/var/simplesamlphp/config
+      - ./data/metadata:/var/simplesamlphp/metadata
+      - ./data/modules:/var/simplesamlphp/modules
+      - ./data/cert:/var/simplesamlphp/cert   
